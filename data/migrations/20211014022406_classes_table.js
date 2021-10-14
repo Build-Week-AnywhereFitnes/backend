@@ -1,8 +1,6 @@
 
 exports.up = function(knex) {
-  return knex.schema    
-  
-  .createTable('classes',tbl =>{
+  return knex.schema.createTable('classes',tbl =>{
       tbl.increments('class_id').primary().unique()
       tbl.text('className',64).notNullable()
     tbl.text('classType',64)
@@ -12,12 +10,12 @@ exports.up = function(knex) {
     tbl.string('location').notNullable()
     tbl.integer('registeredAttendees')
     tbl.integer('classMAX')
-
-  })
+  }).then();
 
 
 };
 
 exports.down = function(knex) {
   return knex.schema
+  .dropTableIfExists('classes')
 };
