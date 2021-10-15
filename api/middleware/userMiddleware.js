@@ -1,6 +1,6 @@
 const Users = require('../users/usersModel')
 
-function checkLoginRequestBody (req, res, next) {
+function checkRequestBody (req, res, next) {
   const user = req.body
 
   if (!user.username || !user.password) {
@@ -14,5 +14,5 @@ function checkLoginRequestBody (req, res, next) {
 }
 
 module.exports = {
-  checkLoginRequestBody
+  checkRequestBody
 }
