@@ -4,8 +4,10 @@
   "description": "All server-side routing and api",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js",
+    "test": "cross-env NODE_ENV=testing jest --watch --verbose --runInBand --silent",
+    "server":"nodemon index.js"
+  
   },
   "repository": {
     "type": "git",

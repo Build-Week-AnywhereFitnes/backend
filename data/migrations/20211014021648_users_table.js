@@ -4,6 +4,7 @@ exports.up = function(knex) {
         tbl.increments('user_id')
         tbl.text('username', 64).unique().notNullable()
         tbl.text('password',128).notNullable()
+        tbl.booleaan('IsInstructor')
         })
         };
 
