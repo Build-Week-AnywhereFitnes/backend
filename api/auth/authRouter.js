@@ -26,10 +26,8 @@ router.post('/register', checkRequestBody, async (req, res, next) => {
     const dbUser = await Users.getUserByUsername(user.username)
     if (!dbUser) {
       const [newUser] = await Users.addUser({ ...user, password: hash })
-      // ^^ needs to be fixed once users have IDs
       res.status(201).json({
-        // newUser,
-        message: `successfully added user`
+        message: `successfully added user ${user.username}`,
       })
     } else {
       res.status(401).json({
@@ -44,7 +42,6 @@ router.post('/register', checkRequestBody, async (req, res, next) => {
 })
 
 router.post('/login', checkRequestBody, async (req, res, next) => {
-  // needs to compare hashed passwords
   // need to generate token
   const user = req.body
 
@@ -52,19 +49,18 @@ router.post('/login', checkRequestBody, async (req, res, next) => {
 
   try {
     const dbUser = await Users.getUserByUsername(user.username)
-    // if (dbUser && bcrypt.compareSync(user.password, dbUser.password)) {
-    if (dbUser && user.password === dbUser.password) {
-      const token = tokenBuilder(user)
+    if (dbUser && bcrypt.compareSync(user.password, dbUser.password) || user.password === dbUser.password) {
+    // if (dbUser && user.password === dbUser.password) {
+      // const token = tokenBuilder(user)
       
       res.status(200).json({
         status: 200,
-        token,
+        // token,
         message: `${dbUser.username} login successful at ${currentTime}`,
         author: `Github: @victoriatrac`,
         user: {
-          id: dbUser.id,
-          username: dbUser.username,
-          password: dbUser.password
+          // id: dbUser.id,
+          username: dbUser.username
         }
       })
     } else {

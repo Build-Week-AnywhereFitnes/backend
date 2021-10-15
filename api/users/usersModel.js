@@ -21,15 +21,16 @@ function getUserById(id) {
 }
 
 function getUserByUsername(username) {
-  return db('users').where({username}).first()
+  return db('users')
+    .where({username})
+    .first()
 }
 
 async function addUser(newUser) {
-  console.log(`this will add ${newUser.username} when they have IDs`)
-  return newUser.username
+  const [addedUser] = await db('users')
+    .insert(newUser)
 
-  // const [newId] = await db('users').insert(newUser, ["id"])
-  // return getUserById(newId.id ?? newId)
+  return newUser.username
 }
 
 module.exports = {
