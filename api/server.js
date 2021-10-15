@@ -5,7 +5,6 @@ const cors = require('cors')
 const server = express()
 // const classRouter = require('')
 const authRouter = require('./auth/authRouter')
-const usersRouter = require('./users/users-router')
 
 require('colors')
 
@@ -18,7 +17,6 @@ const currentTime = new Date().toLocaleTimeString()
 
 // server.use('/api/classes', classRouter)
 server.use('/api/auth', authRouter)
-server.use('/api/users', usersRouter)
 
 server.get('/', (req, res)=>{
   res.status(200).json({
@@ -30,4 +28,3 @@ server.get('/', (req, res)=>{
 })
 
 module.exports = server
-
