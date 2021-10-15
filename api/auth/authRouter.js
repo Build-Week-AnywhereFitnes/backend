@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const Users = require('./usersModel')
+const Users = require('../users/usersModel')
 const {
   checkLoginRequestBody
 } = require('../middleware/userMiddleware')
