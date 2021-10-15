@@ -1,94 +1,91 @@
-const express = require('express');
-const Classes = require('./classes-model');
-const router = express.Router();
+const db = require('../../data/db-config');
 
-// [GET] All Classes
+const router = require('express').Router()
+const Classes = require('./classes-model')
 
-router.get('/', (req, res, next)=>{
-    Classes.getAllClasses()
-    .then((allClasses) =>{
-       res.status(200).json(allClasses); 
+// getAllClasses()
+router.get('/', (req, res, next) => {
+  Classes.getAllClasses()
+    .then((classes) => {
+      res.status(200).json({
+        message: `All classes fetched:`,
+        classes
+      })
     })
-    .catch((err)=>{
-        res.status(500).json({message: err.message})
+    .catch((err) => {
+      err.message = `Failed to get classes`
+      next(err)
     })
-});
+  })
 
-// [GET] Class by Class_Id
+// getClassByClassId(Class_Id)
+router.get('/:id', (req, res, next) => {
+  const { id } = req.params
 
-router.get('/:Class_Id', (req, res, next)=>{
-
-    const {Class_Id} = req.params;
-
-    if(Class_Id){
-        Classes.getClassByClassId(Class_Id)
-        .then((classType)=>{
-            res.status(200).json(classType[0]);
-        })
-        .catch((err)=>{
-            res.status(500).json({message: err.message});
-        })
-    } else {
-        res.status(406).json({message: 'You need the Class ID to continue.'})
-    }
-});
-
-// [Post] Add New Class by Class_Id
-
-router.post("/", (req, res, next)=>{
-
-    const newClass = req.body;
-
-    if(newClass.Class_Id && newClass.Name){
-        if (typeof newClass.Class_Id === "number"){
-            Classes.addClass(newClass)
-            .then((newestClass)=>{
-                res.status(200).json(newestClass[0]);
-            })
-            .catch((err)=>{
-                res.status(500).json({message: err.message});
-            })
-        } else {
-            res.status(406).json({message: "Class_Id must be a number"});
-        }
-    } else {
-        res.status(406).json({message: "Class_Id and Name are required"});
-    }
+  Classes.getClassByClassId(id)
+    .then(([foundClass]) => {
+      res.status(200).json(foundClass)
+    })
+    .catch((err) => {
+      err.message = `Server failed to find item with id: ${id}`
+      next(err)
+    })
 })
 
-// [PUT] Update by Class_Id
+// addClass(Added_Class)
+router.post('/', async (req, res, next) => {
+  // need to check that the user is logged in
 
-router.put("/:Class_Id", (req, res, next)=>{
+  const aClass = req.body
 
-    const updatedClass = req.body;
-
-    if(updatedClass.Name && updatedClass.Class_Id){
-        Classes.updateClass(updatedClass)
-            .then((update)=>{
-                res.status(200).json(update[0]);
-            })
-            .catch((err)=>{
-                res.status(500).json({message: err.message});
-            })
-    } else {
-        res.status(406).json({message: "Class_Id and Name are required"});
-    }
-    
+  Classes.addClass(aClass)
+    .then(savedClass => {
+      res.status(201).json(`added ${savedClass.className}`)
+    })
+    .catch((err) => {
+      err.message = `Server failed to add new class`
+      next(err)
+    })
 })
 
-// [Del] Remove Class by Class_Id
+// updateClass(Updated_Class)
+router.put('/:id', (req, res, next) => {
+  // need to check the user is logged in
 
-router.delete("/:Class_Id", (req, res, next)=>{
-    
-    const { Class_Id } = req.params;
+  const classToUpdate = req.params.id
+  const changedInfo = req.body
+  console.log(classToUpdate)
+  console.log(changedInfo)
 
-    Classes.deleteClass(Class_Id)
-        .then((resolution)=>{
-            res.status(200).json(resolution);
-        })
-        .catch((err)=>{
-            res.status(500).json({message: err.message});
-        })
+  // if user is not logged in ... else ...
+  Classes.updateClass(classToUpdate, changedInfo)
+    .then(([updatedClass]) => {
+      res.status(200).json(updatedClass)
+    })
+    .catch((err) => {
+      err.message = `Server failed to edit item ${classToUpdate}`
+      next(err)
+    })
 })
 
-module.exports = router;
+// deleteClass(Deleted_Class)
+router.delete('/:id', (req, res, next) => {
+  const classToDelete = req.params.id
+
+  console.log('router: delete class:', classToDelete)
+
+  Classes.deleteClass(classToDelete)
+    .then(count => {
+      if (count > 0) {
+        res.status(200).json({
+          message: `${classToDelete} is removed`
+        })
+      } else {
+        res.status(404).json({ message:
+        `record not found`})
+      }
+    })
+    .catch(next)
+})
+
+module.exports = router
