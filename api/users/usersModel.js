@@ -1,23 +1,23 @@
 const db = require('../../data/db-config')
 
 function getUsers() {
-  return db
+  return db('users')
     .select(
       'users.username',
       'users.password'
     )
-    .from('users')
+  
 }
 
-function getUserById(id) {
-  console.log(`id ${id} reached`)
+function getUserById(user_id) {
+  console.log(`id ${user_id} reached`)
 
   // database needs id numbers for users
 
-  return db
+  return db('users')
     .select('users.username', 'users.password')
-    .from('users')
-    .where('users.id', id)
+    .where('users.user_id', user_id)
+    .first()
 }
 
 function getUserByUsername(username) {

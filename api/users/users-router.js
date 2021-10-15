@@ -22,9 +22,9 @@ router.get('/', (req, res, next) => {
 router.get('/:id', (req, res, next) => {
   // Users need user.id in database
   // need middleware to checkID, restrict access
-  const { id } = req.params    
+  const { user_id } = req.params    
 
-  Users.getUserById(id)
+  Users.getUserById(user_id)
 
   res.status(200).json({
     status: 200,
