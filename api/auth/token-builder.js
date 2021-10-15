@@ -6,9 +6,9 @@ module.exports = function (username) {
   // return console.log(user, `token built`)
 
   const payload = {
-    // sub: user.id,
+    subject: user.id,
     username: username,
-    // password: user.password
+   
   }
 
   const options = {
