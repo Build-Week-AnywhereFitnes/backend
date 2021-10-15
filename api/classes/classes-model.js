@@ -26,11 +26,13 @@ async function updateClass(id, Updated_Class) {
 };
 
 async function deleteClass(Deleted_Class) {
+
   const count = await db('classes')
     .where('classes.class_id', Deleted_Class)
     .del()
 
   return count
+
 };
 
 module.exports = {
