@@ -26,8 +26,8 @@ async function updateClass(Updated_Class) {
 
 async function deleteClass(Deleted_Class) {
     await db('Classes')
-        .where('Class_Id', deleteClass)
-        .deleteClass
+        .where('Class_Id', Deleted_Class)
+        .del()
     
     return getAllClasses();
 };
