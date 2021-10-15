@@ -4,8 +4,7 @@ const morgan = require('morgan')
 const cors = require('cors')
 const server = express()
 // const classRouter = require('')
-// const authRouter = require('')   
-const usersRouter = require('./users/usersRouter')
+const authRouter = require('./auth/authRouter')
 
 require('colors')
 
@@ -17,8 +16,7 @@ server.use(cors());
 const currentTime = new Date().toLocaleTimeString()
 
 // server.use('/api/classes', classRouter)
-// server.use('/api/auth', authRouter)
-server.use('/api/users', usersRouter)
+server.use('/api/auth', authRouter)
 
 server.get('/', (req, res)=>{
   res.status(200).json({
