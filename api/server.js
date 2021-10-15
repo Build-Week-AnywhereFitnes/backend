@@ -3,8 +3,9 @@ const helmet = require('helmet')
 const morgan = require('morgan')
 const cors = require('cors')
 const server = express()
-// const classRouter = require('')
+const classRouter = require('./classes/classes-router')
 const authRouter = require('./auth/authRouter')
+const usersRouter = require('./users/users-router')
 
 require('colors')
 
@@ -15,8 +16,9 @@ server.use(cors());
 
 const currentTime = new Date().toLocaleTimeString()
 
-// server.use('/api/classes', classRouter)
+server.use('/api/classes', classRouter)
 server.use('/api/auth', authRouter)
+server.use('/api/users', usersRouter)
 
 server.get('/', (req, res)=>{
   res.status(200).json({
@@ -28,4 +30,3 @@ server.get('/', (req, res)=>{
 })
 
 module.exports = server
-

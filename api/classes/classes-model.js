@@ -1,35 +1,36 @@
 const db = require('../../data/db-config');
 
 function getAllClasses() {
-    return db('Classes');
+  return db('Classes');
 };
 
-function getClassByClassId(Class_Id) {
-    return db('Classes')
-        .where('Class_Id', Class_Id);
+function getClassByClassId(class_Id) {
+  return db('classes')
+    .where('class_Id', class_Id);
 };
 
 async function addClass(Added_Class) {
-    await db('Classes')
-        .insert('Added_Class')
+  const [class_id] = await db('classes')
+    .insert(Added_Class)
 
-    return getClassByClassId(Added_Class.Class_Id);
+  return getAllClasses()
+    .where({class_id}).first()
 };
 
-async function updateClass(Updated_Class) {
-    await db('Classes')
-        .where('Class_Id', Updated_Class.Class_Id)
-        .update(Updated_Class)
+async function updateClass(id, Updated_Class) {
+  const class_id = await db('classes')
+    .where('classes.class_id', id)
+    .update(Updated_Class)
 
-    return getClassByClassId(Updated_Class.Class_Id);
+  return await getClassByClassId(id)
 };
 
 async function deleteClass(Deleted_Class) {
-    await db('Classes')
-        .where('Class_Id', deleteClass)
-        .deleteClass
-    
-    return getAllClasses();
+  const count = await db('classes')
+    .where('classes.class_id', Deleted_Class)
+    .del()
+
+  return count
 };
 
 module.exports = {
