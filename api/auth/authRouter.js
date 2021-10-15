@@ -3,8 +3,8 @@ const Users = require('../users/usersModel')
 const {
   checkRequestBody
 } = require('../middleware/userMiddleware')
-const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
+const tokenBuilder = require('./token-builder.js')
 
 const currentTime = new Date().toLocaleTimeString()
 
@@ -54,10 +54,11 @@ router.post('/login', checkRequestBody, async (req, res, next) => {
     const dbUser = await Users.getUserByUsername(user.username)
     // if (dbUser && bcrypt.compareSync(user.password, dbUser.password)) {
     if (dbUser && user.password === dbUser.password) {
-      // const token = generateToken(dbUser.username)
+      const token = tokenBuilder(user)
+      
       res.status(200).json({
         status: 200,
-        // token,
+        token,
         message: `${dbUser.username} login successful at ${currentTime}`,
         author: `Github: @victoriatrac`,
         user: {
