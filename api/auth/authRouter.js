@@ -17,19 +17,26 @@ router.get('/', (req, res, next) => {
 })
 
 router.post('/register', checkRequestBody, async (req, res, next) => {
-  // need to check the db to see if username exists
   const user = req.body
   const hash = bcrypt.hashSync(user.password, 8)
 
   console.log(`Attempting to register with ${user.username}, ${user.password}`.yellow)
 
   try {
-    const [newUser] = await Users.addUser({ ...user, password: hash })
-    // ^^ needs to be fixed once users have IDs
-    res.status(201).json({
-      // newUser,
-      message: `successfully added user`
-    })
+    const dbUser = await Users.getUserByUsername(user.username)
+    if (!dbUser) {
+      const [newUser] = await Users.addUser({ ...user, password: hash })
+      // ^^ needs to be fixed once users have IDs
+      res.status(201).json({
+        // newUser,
+        message: `successfully added user`
+      })
+    } else {
+      res.status(401).json({
+        status: 401,
+        message: `The username ${dbUser.username} already exists`
+      })
+    }
   } catch (err) {
     err.message = `Server failed to add user ${user.username}`
     next(err)
