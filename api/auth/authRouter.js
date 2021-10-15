@@ -1,7 +1,7 @@
 const router = require('express').Router()
 const Users = require('../users/usersModel')
 const {
-  checkLoginRequestBody
+  checkRequestBody
 } = require('../middleware/userMiddleware')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
@@ -11,23 +11,44 @@ const currentTime = new Date().toLocaleTimeString()
 router.get('/', (req, res, next) => {
   res.status(200).json({
     status: 200,
-    message: `Get /api/users running at ${currentTime}`,
+    message: `Get /api/auth running at ${currentTime}`,
     author: `Github: @victoriatrac`
   })
 })
 
-router.get('/:id', (req, res, next) => {
-  res.status(200).json({
-    status: 200,
-    message: `Get /api/users/:id running at ${currentTime}`,
-    author: `Github: @victoriatrac`
-  })
+router.post('/register', checkRequestBody, async (req, res, next) => {
+  const user = req.body
+  const hash = bcrypt.hashSync(user.password, 8)
+
+  console.log(`Attempting to register with ${user.username}, ${user.password}`.yellow)
+
+  try {
+    const dbUser = await Users.getUserByUsername(user.username)
+    if (!dbUser) {
+      const [newUser] = await Users.addUser({ ...user, password: hash })
+      // ^^ needs to be fixed once users have IDs
+      res.status(201).json({
+        // newUser,
+        message: `successfully added user`
+      })
+    } else {
+      res.status(401).json({
+        status: 401,
+        message: `The username ${dbUser.username} already exists`
+      })
+    }
+  } catch (err) {
+    err.message = `Server failed to add user ${user.username}`
+    next(err)
+  }
 })
 
-router.post('/login', checkLoginRequestBody, async (req, res, next) => {
+router.post('/login', checkRequestBody, async (req, res, next) => {
+  // needs to compare hashed passwords
+  // need to generate token
   const user = req.body
 
-  console.log(`Attempting to login with: ${user.username} ${user.password}`.yellow)
+  console.log(`Attempting to login with: ${user.username}, ${user.password}`.yellow)
 
   try {
     const dbUser = await Users.getUserByUsername(user.username)
