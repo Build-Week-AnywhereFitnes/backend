@@ -1,16 +1,16 @@
 const db = require('../../data/db-config');
 
 function getAllClasses() {
-  return db('Classes');
+  return db('classes');
 };
 
 function getClassByClassId(Class_Id) {
-  return db('Classes')
-    .where('Class_Id', Class_Id);
+  return db('classes')
+    .where('class_Id', Class_Id);
 };
 
 async function addClass(Added_Class) {
-  const [class_id] = await db('Classes')
+  const [class_id] = await db('classes')
     .insert(Added_Class)
 
   return getAllClasses()
