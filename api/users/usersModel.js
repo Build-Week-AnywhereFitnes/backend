@@ -33,9 +33,16 @@ async function addUser(newUser) {
   return newUser.username
 }
 
+async function deleteUser(username) {
+  const count = await db('users')
+    .where({username}).del()
+  return count
+}
+
 module.exports = {
   getUsers,
   getUserById,
   getUserByUsername,
-  addUser
+  addUser,
+  deleteUser
 }
