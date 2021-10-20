@@ -49,7 +49,7 @@ router.post('/login', checkRequestBody, async (req, res, next) => {
   try {
     const dbUser = await Users.getUserByUsername(user.username)
     if (dbUser && bcrypt.compareSync(user.password, dbUser.password) || user.password === dbUser.password) {
-      const token = tokenBuilder(user)
+      const token = tokenBuilder(dbUser)
       
       res.status(200).json({
         status: 200,
