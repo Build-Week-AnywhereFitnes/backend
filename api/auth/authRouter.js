@@ -42,7 +42,6 @@ router.post('/register', checkRequestBody, async (req, res, next) => {
 })
 
 router.post('/login', checkRequestBody, async (req, res, next) => {
-  // need to generate token
   const user = req.body
 
   console.log(`Attempting to login with: ${user.username}, ${user.password}`.yellow)
@@ -50,12 +49,11 @@ router.post('/login', checkRequestBody, async (req, res, next) => {
   try {
     const dbUser = await Users.getUserByUsername(user.username)
     if (dbUser && bcrypt.compareSync(user.password, dbUser.password) || user.password === dbUser.password) {
-    // if (dbUser && user.password === dbUser.password) {
-      // const token = tokenBuilder(user)
+      const token = tokenBuilder(user)
       
       res.status(200).json({
         status: 200,
-        // token,
+        token: token,
         message: `${dbUser.username} login successful at ${currentTime}`,
         author: `Github: @victoriatrac`,
         user: {

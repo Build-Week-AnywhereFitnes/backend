@@ -1,14 +1,14 @@
 const jwt = require('jsonwebtoken');
 const { JWT_SECRET } = require('../../config/secret')
 
-module.exports = function (username) {
+module.exports = function (user) {
 
-  // return console.log(user, `token built`)
+  console.log(user.username, `token built`)
 
   const payload = {
-    // sub: user.id,
-    username: username,
-    // password: user.password
+    // sub: user.user_id,
+    username: user.username,
+    password: user.password
   }
 
   const options = {
