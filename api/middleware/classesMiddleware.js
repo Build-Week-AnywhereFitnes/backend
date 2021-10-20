@@ -1,6 +1,7 @@
 
 const Classes = require('../classes/classes-model')
-
+// getByRole for isInstructor
+const User = require('../users/usersModel')
 
 const checkClassId = (req,res,next)=>{
     const {class_id} = req.params;
@@ -20,10 +21,19 @@ const validateClass = (req,res,next)=>{
     } else{
         next()
 }}
-
-
+// need db access function getByRole in user model
+const isInstructor = (req,res,next)=> {
+    //error on the line below, how to get role into params/body/header
+        //const {role} = req.params;
+    User.getByRole(role)
+    if(user_role === 'client' || user_role ===''){
+        res.status(401).json({message:'Unauthorized request'})
+} else{
+    next()}
+}
 
 module.exports = {
     checkClassId,
-    validateClass
+    validateClass, 
+    isInstructor
 }
