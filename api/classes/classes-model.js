@@ -9,29 +9,29 @@ function getClassByClassId(Class_Id) {
     .where('class_Id', Class_Id);
 };
 
-function countOpenSpots(Class_Id) {
-  // return db('usersInClasses')
-  //   .count('class_id as count')
-  //   .where('class_id', Class_Id)
+function countTakenSpots(Class_Id) {
+  const takenSpots = db('usersInClasses')
+    .count('class_id as count')
+    .where('class_id', Class_Id)
+    // .catch((err) => {
+    //   res.json({
+    //     message: `failed retrieving taken spots`
+    //   })
+    // next(err)
+    // })
 
-  // maybe use knex.raw() to do math??
-
-  return db('usersInClasses')
-  .count('class_id as count')
-  .where('class_id', Class_Id)
-  .catch((err) => {
-    res.json({
-      message: `failed retrieving taken spots`
-    })
-    next(err)
-  })
+  // return maxSpots - takenSpots
+  return takenSpots
 }
 
-// function searchClasses(key) {
-//   // console.log('searched', key)
-//   return getAllClasses()
-//     // .where({key})
-// };
+function countMaxSpots(Class_Id) {
+  const maxSpots = db('classes')
+    .select('classMax')
+    .where('class_id', Class_Id)
+    .from('classes')
+  console.log(`maxSpots`, maxSpots)
+  return maxSpots
+}
 
 async function addClass(Added_Class) {
   const [class_id] = await db('classes')
@@ -62,7 +62,8 @@ async function deleteClass(Deleted_Class) {
 module.exports = {
     getAllClasses,
     getClassByClassId,
-    countOpenSpots,
+    countTakenSpots,
+    countMaxSpots,
     // searchClasses,
     addClass,
     updateClass,
