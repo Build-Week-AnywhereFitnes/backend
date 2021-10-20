@@ -1,11 +1,15 @@
 const db = require('../../data/db-config')
 
 function getUsers() {
-  return db('users')
+  return db('users as u')
+    .join('roles as r', 'u.role', '=', 'r.role_id')
     .select(
-      'users.user_id', 'users.username', 'users.password'
+      'u.user_id',
+      'u.username',
+      'u.password',
+      'r.role_name as role',
+      'u.auth'
     )
-    .from('users')
 }
 
 function getUserById(id) {
