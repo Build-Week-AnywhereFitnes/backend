@@ -36,30 +36,31 @@ router.get('/:id', restricted, (req, res, next) => {
     })
 })
 
-// countOpenSpots(Class_Id)
+// countTakenSpots(Class_Id)
 router.get('/register/:id', async (req, res, next) => {
   const { id } = req.params
 
-  Classes.countOpenSpots(id)
-  // want to get # of free spots, have # of taken spots
+  Classes.countTakenSpots(id)
     .then((numberOfSpots) => {
       const freeSpots = numberOfSpots[0].count
-
-      // Classes.getClassByClassId(id)
-      //   .then(([foundClass]) => {
-      //     console.log(foundClass)
-      //     res.status(200).json(foundClass)
-      //   })
-      //   .catch((err) => {
-      //     next(err)
-      //   })
-
+      // return freeSpots
       res.status(200).json(freeSpots)
     })
     .catch((err) => {
       err.message = `Server failed`
       next(err)
     })
+
+  // Classes.countMaxSpots(id)
+  //   .then((spots) => {
+  //     // const spots = maxSpots[0].classMax
+  //     // return spots
+  //     res.status(200).json(spots)
+  //   })
+  //   .catch((err) => {
+  //     err.message = `counting max failed`
+  //     next(err)
+  //   })
 })
 
 // // searchClasses(key)
