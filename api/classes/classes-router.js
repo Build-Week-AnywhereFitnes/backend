@@ -40,29 +40,19 @@ router.get('/:id', restricted, (req, res, next) => {
 router.get('/register/:id', async (req, res, next) => {
   const { id } = req.params
 
-  const maxSpots = db('classes')
-    .select('classMax')
-    .where('class_id', id)
-
-    // console.log('max', maxSpots)
-
   Classes.countOpenSpots(id)
+  // want to get # of free spots, have # of taken spots
     .then((numberOfSpots) => {
-      // console.log(numberOfSpots)
-      // res.status(200).json(numberOfSpots[0].count)
       const freeSpots = numberOfSpots[0].count
 
-      // Classes.getMaxSpots(id)
-      //   .then((maxSpots) => {
-      //     res.status(200).json(maxSpots)
-      //     console.log(`maxspots`, maxSpots)
+      // Classes.getClassByClassId(id)
+      //   .then(([foundClass]) => {
+      //     console.log(foundClass)
+      //     res.status(200).json(foundClass)
       //   })
       //   .catch((err) => {
-      //     err.message = `failed to get max spots`
       //     next(err)
       //   })
-
-        // console.log(maxSpots)
 
       res.status(200).json(freeSpots)
     })

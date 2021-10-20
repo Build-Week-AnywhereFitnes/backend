@@ -27,12 +27,6 @@ function countOpenSpots(Class_Id) {
 return result
 }
 
-// function getMaxSpots(Class_Id) {
-//   return db('classes')
-//     .select('classMax')
-//     .where('class_id', Class_Id)
-// }
-
 async function addClass(Added_Class) {
   const [class_id] = await db('classes')
     .insert(Added_Class)
@@ -63,7 +57,6 @@ module.exports = {
     getAllClasses,
     getClassByClassId,
     countOpenSpots,
-    // getMaxSpots,
     addClass,
     updateClass,
     deleteClass
