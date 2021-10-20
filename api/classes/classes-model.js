@@ -63,7 +63,7 @@ module.exports = {
     getAllClasses,
     getClassByClassId,
     countOpenSpots,
-    searchClasses,
+    // searchClasses,
     addClass,
     updateClass,
     deleteClass

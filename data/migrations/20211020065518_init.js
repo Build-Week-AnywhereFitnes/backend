@@ -5,7 +5,7 @@ exports.up = function(knex) {
   
     .createTable('roles', tbl => {
       tbl.increments('role_id')
-      tbl.string('role_name')
+      tbl.string('role_name').notNullable().unique()
     })
 
     .createTable('users', tbl => {
@@ -30,7 +30,6 @@ exports.up = function(knex) {
       tbl.string('duration').notNullable()
       tbl.string('intensityLevel').notNullable()
       tbl.string('location').notNullable()
-      tbl.integer('registeredAttendees').notNullable()
       tbl.integer('classMax').notNullable()
     })
 

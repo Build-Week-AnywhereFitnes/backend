@@ -10,7 +10,6 @@ exports.seed = function(knex) {
       duration: '1hr',
       intensityLevel: 'Low',
       location: 'Jefferson Park',
-      registeredAttendees: 7,
       classMax: 10
     },
     {
@@ -21,7 +20,6 @@ exports.seed = function(knex) {
       duration: '1hr',
       intensityLevel: 'High',
       location: 'Beach',
-      registeredAttendees: 5,
       classMax: 15
     },
     {
@@ -32,7 +30,6 @@ exports.seed = function(knex) {
       duration: '1hr',
       intensityLevel: 'Medium',
       location: 'Hot studio',
-      registeredAttendees: 11,
       classMax: 20
     },
   ]

@@ -10,7 +10,7 @@ router.get('/', restricted, (req, res, next) => {
   Users.getUsers()
     .then((users) => {
       res.status(200).json({
-        message: `All users fetched:`,
+        message: `All users fetched at ${currentTime}:`,
         users
       })
     })
