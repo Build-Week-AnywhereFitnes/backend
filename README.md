@@ -1,5 +1,6 @@
 # backend
 All server-side routing and api
+
 [POST] Create a new user
 /api/auth/register
 * USERNAME - STRING - REQUIRED
@@ -13,14 +14,15 @@ Returns the newly added user
 * PASSWORD - STRING - REQUIRED
 Returns message: `${dbUser.username} login successful at ${currentTime} and user info { username }
 // will return user id in addition to username
+
 [GET] List of all users
 /api/users
 Returns all users
+
 [GET] User by ID
 /api/users/:id
 * USER_ID - INT - REQUIRED
 Returns message: `Get /api/users/:id running at ${currentTime}`
-// currently not working
 
 [GET] List of all classes
 /api/classes

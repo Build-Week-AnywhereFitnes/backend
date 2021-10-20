@@ -3,9 +3,11 @@ const db = require('../../data/db-config');
 const router = require('express').Router()
 const Classes = require('./classes-model')
 
-const {isInstructor} = require('../middleware/classesMiddleware')
+const restricted = require('../middleware/auth-middleware')
+const adminCheck = require('../middleware/admin-middleware')
+
 // getAllClasses()
-router.get('/', (req, res, next) => {
+router.get('/', restricted, (req, res, next) => {
   Classes.getAllClasses()
     .then((classes) => {
       res.status(200).json({
@@ -20,7 +22,7 @@ router.get('/', (req, res, next) => {
   })
 
 // getClassByClassId(Class_Id)
-router.get('/:id', (req, res, next) => {
+router.get('/:id', restricted, (req, res, next) => {
   const { id } = req.params
 
   Classes.getClassByClassId(id)
@@ -34,9 +36,7 @@ router.get('/:id', (req, res, next) => {
 })
 
 // addClass(Added_Class)
-router.post('/', /*isInstructor() ,*/ async (req, res, next) => {
-  // need to check that the user is logged in
-
+router.post('/', restricted, adminCheck, async (req, res, next) => {
   const aClass = req.body
 
   Classes.addClass(aClass)
@@ -50,15 +50,12 @@ router.post('/', /*isInstructor() ,*/ async (req, res, next) => {
 })
 
 // updateClass(Updated_Class)
-router.put('/:id',/*isInstructor(),*/ (req, res, next) => {
-  // need to check the user is logged in
-
+router.put('/:id', restricted, adminCheck, (req, res, next) => {
   const classToUpdate = req.params.id
   const changedInfo = req.body
   console.log(classToUpdate)
   console.log(changedInfo)
 
-  // if user is not logged in ... else ...
   Classes.updateClass(classToUpdate, changedInfo)
     .then(([updatedClass]) => {
       res.status(200).json(updatedClass)
@@ -70,7 +67,7 @@ router.put('/:id',/*isInstructor(),*/ (req, res, next) => {
 })
 
 // deleteClass(Deleted_Class)
-router.delete('/:id',/* isInstructor(),*/(req, res, next) => {
+router.delete('/:id', restricted, adminCheck, (req, res, next) => {
   const classToDelete = req.params.id
 
   console.log('router: delete class:', classToDelete)
