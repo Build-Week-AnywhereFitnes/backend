@@ -1,10 +1,12 @@
 const router = require('express').Router()
 const Users = require('../users/usersModel')
 
+const restricted = require('../middleware/auth-middleware')
+
 const currentTime = new Date().toLocaleTimeString()
 
 // Get list of all users
-router.get('/', (req, res, next) => {
+router.get('/', restricted, (req, res, next) => {
   Users.getUsers()
     .then((users) => {
       res.status(200).json({
@@ -19,7 +21,7 @@ router.get('/', (req, res, next) => {
 })
 
 // Get users by ID
-router.get('/:id', (req, res, next) => {
+router.get('/:id', restricted, (req, res, next) => {
   // need middleware to checkID, restrict access
   const id = req.params.id
 
@@ -40,7 +42,7 @@ router.get('/:id', (req, res, next) => {
 // Edit user
 
 // Delete user
-router.delete('/', (req, res, next) => {
+router.delete('/', restricted, (req, res, next) => {
   console.log(req.body)
   const { username } = req.body
 

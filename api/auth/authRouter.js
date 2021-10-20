@@ -57,7 +57,6 @@ router.post('/login', checkRequestBody, async (req, res, next) => {
         message: `${dbUser.username} login successful at ${currentTime}`,
         author: `Github: @victoriatrac`,
         user: {
-          // id: dbUser.id,
           username: dbUser.username
         }
       })
