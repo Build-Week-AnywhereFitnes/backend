@@ -3,6 +3,7 @@ const db = require('../../data/db-config');
 const router = require('express').Router()
 const Classes = require('./classes-model')
 
+const {isInstructor} = require('../middleware/classesMiddleware')
 // getAllClasses()
 router.get('/', (req, res, next) => {
   Classes.getAllClasses()
@@ -33,7 +34,7 @@ router.get('/:id', (req, res, next) => {
 })
 
 // addClass(Added_Class)
-router.post('/', async (req, res, next) => {
+router.post('/', /*isInstructor() ,*/ async (req, res, next) => {
   // need to check that the user is logged in
 
   const aClass = req.body
@@ -49,7 +50,7 @@ router.post('/', async (req, res, next) => {
 })
 
 // updateClass(Updated_Class)
-router.put('/:id', (req, res, next) => {
+router.put('/:id',/*isInstructor(),*/ (req, res, next) => {
   // need to check the user is logged in
 
   const classToUpdate = req.params.id
@@ -69,7 +70,7 @@ router.put('/:id', (req, res, next) => {
 })
 
 // deleteClass(Deleted_Class)
-router.delete('/:id', (req, res, next) => {
+router.delete('/:id',/* isInstructor(),*/(req, res, next) => {
   const classToDelete = req.params.id
 
   console.log('router: delete class:', classToDelete)

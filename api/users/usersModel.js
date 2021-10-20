@@ -10,13 +10,11 @@ function getUsers() {
 }
 
 function getUserById(user_id) {
-  console.log(`id ${user_id} reached`)
-
   // database needs id numbers for users
 
   return db('users')
-    .select('users.username', 'users.password')
-    .where('users.user_id', user_id)
+    .select('username', 'password')
+    .where('user_id', user_id)
     .first()
 }
 
@@ -33,9 +31,17 @@ async function addUser(newUser) {
   return newUser.username
 }
 
+function getByRole(role){
+return db('roles')  
+.where({role})
+.first()
+}
+
+
 module.exports = {
   getUsers,
   getUserById,
   getUserByUsername,
-  addUser
-}
+  addUser,
+  getByRole
+};
