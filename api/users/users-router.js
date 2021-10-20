@@ -18,17 +18,16 @@ router.get('/', (req, res, next) => {
     })
 })
 
-// // Get users by ID
+// Get users by ID
 router.get('/:id', (req, res, next) => {
-  // not working - users need user.id in database
   // need middleware to checkID, restrict access
-  const { id } = req.params    
+  const id = req.params.id
 
   Users.getUserById(id)
-  .then((user) => {
+  .then(user => {
     res.status(200).json({
       status: 200,
-      message: `Get /api/users/:id running at ${currentTime}`,
+      message: `Get /api/users/${id} running at ${currentTime}`,
       user
     })
   })
