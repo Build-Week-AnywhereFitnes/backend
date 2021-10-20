@@ -62,6 +62,11 @@ router.get('/register/:id', async (req, res, next) => {
     })
 })
 
+// // searchClasses(key)
+// router.get('/search', async (req, res, next) => {
+//   res.message({'hi': 'hi'})
+// })
+
 // addClass(Added_Class)
 router.post('/', restricted, adminCheck, async (req, res, next) => {
   const aClass = req.body
