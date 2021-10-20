@@ -27,6 +27,12 @@ function countOpenSpots(Class_Id) {
   })
 }
 
+// function searchClasses(key) {
+//   // console.log('searched', key)
+//   return getAllClasses()
+//     // .where({key})
+// };
+
 async function addClass(Added_Class) {
   const [class_id] = await db('classes')
     .insert(Added_Class)
@@ -57,6 +63,7 @@ module.exports = {
     getAllClasses,
     getClassByClassId,
     countOpenSpots,
+    searchClasses,
     addClass,
     updateClass,
     deleteClass
