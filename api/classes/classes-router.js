@@ -4,7 +4,8 @@ const router = require('express').Router()
 const Classes = require('./classes-model')
 
 const restricted = require('../middleware/auth-middleware')
-const adminCheck = require('../middleware/admin-middleware')
+const adminCheck = require('../middleware/admin-middleware');
+// const { default: knex } = require('knex');
 
 // getAllClasses()
 router.get('/', restricted, (req, res, next) => {
@@ -31,6 +32,32 @@ router.get('/:id', restricted, (req, res, next) => {
     })
     .catch((err) => {
       err.message = `Server failed to find item with id: ${id}`
+      next(err)
+    })
+})
+
+// countOpenSpots(Class_Id)
+router.get('/register/:id', async (req, res, next) => {
+  const { id } = req.params
+
+  Classes.countOpenSpots(id)
+  // want to get # of free spots, have # of taken spots
+    .then((numberOfSpots) => {
+      const freeSpots = numberOfSpots[0].count
+
+      // Classes.getClassByClassId(id)
+      //   .then(([foundClass]) => {
+      //     console.log(foundClass)
+      //     res.status(200).json(foundClass)
+      //   })
+      //   .catch((err) => {
+      //     next(err)
+      //   })
+
+      res.status(200).json(freeSpots)
+    })
+    .catch((err) => {
+      err.message = `Server failed`
       next(err)
     })
 })

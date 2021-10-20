@@ -9,6 +9,24 @@ function getClassByClassId(Class_Id) {
     .where('class_Id', Class_Id);
 };
 
+function countOpenSpots(Class_Id) {
+  // return db('usersInClasses')
+  //   .count('class_id as count')
+  //   .where('class_id', Class_Id)
+
+  const result = db('usersInClasses')
+  .count('class_id as count')
+  .where('class_id', Class_Id)
+  .catch((err) => {
+    res.json({
+      message: `failed retrieving taken spots`
+    })
+    next(err)
+  })
+
+return result
+}
+
 async function addClass(Added_Class) {
   const [class_id] = await db('classes')
     .insert(Added_Class)
@@ -38,6 +56,7 @@ async function deleteClass(Deleted_Class) {
 module.exports = {
     getAllClasses,
     getClassByClassId,
+    countOpenSpots,
     addClass,
     updateClass,
     deleteClass
