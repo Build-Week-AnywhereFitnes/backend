@@ -8,8 +8,8 @@ module.exports = function (user) {
   const payload = {
     sub: user.user_id,
     username: user.username,
-    password: user.password,
-    // role: user.role
+    // password: user.password,
+    role: user.role
   }
 
   console.log('payload', payload)
