@@ -14,7 +14,9 @@ function countOpenSpots(Class_Id) {
   //   .count('class_id as count')
   //   .where('class_id', Class_Id)
 
-  const result = db('usersInClasses')
+  // maybe use knex.raw() to do math??
+
+  return db('usersInClasses')
   .count('class_id as count')
   .where('class_id', Class_Id)
   .catch((err) => {
@@ -23,8 +25,6 @@ function countOpenSpots(Class_Id) {
     })
     next(err)
   })
-
-return result
 }
 
 async function addClass(Added_Class) {
