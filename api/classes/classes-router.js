@@ -4,7 +4,8 @@ const router = require('express').Router()
 const Classes = require('./classes-model')
 
 const restricted = require('../middleware/auth-middleware')
-const adminCheck = require('../middleware/admin-middleware')
+const adminCheck = require('../middleware/admin-middleware');
+// const { default: knex } = require('knex');
 
 // getAllClasses()
 router.get('/', restricted, (req, res, next) => {
@@ -31,6 +32,42 @@ router.get('/:id', restricted, (req, res, next) => {
     })
     .catch((err) => {
       err.message = `Server failed to find item with id: ${id}`
+      next(err)
+    })
+})
+
+// countOpenSpots(Class_Id)
+router.get('/register/:id', async (req, res, next) => {
+  const { id } = req.params
+
+  const maxSpots = db('classes')
+    .select('classMax')
+    .where('class_id', id)
+
+    // console.log('max', maxSpots)
+
+  Classes.countOpenSpots(id)
+    .then((numberOfSpots) => {
+      // console.log(numberOfSpots)
+      // res.status(200).json(numberOfSpots[0].count)
+      const freeSpots = numberOfSpots[0].count
+
+      // Classes.getMaxSpots(id)
+      //   .then((maxSpots) => {
+      //     res.status(200).json(maxSpots)
+      //     console.log(`maxspots`, maxSpots)
+      //   })
+      //   .catch((err) => {
+      //     err.message = `failed to get max spots`
+      //     next(err)
+      //   })
+
+        // console.log(maxSpots)
+
+      res.status(200).json(freeSpots)
+    })
+    .catch((err) => {
+      err.message = `Server failed`
       next(err)
     })
 })

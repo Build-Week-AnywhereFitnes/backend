@@ -33,6 +33,11 @@ Returns all classes
 * CLASS_ID - INT - REQUIRED
 Returns class data
 
+[GET] Count of open spots in a class
+/api/classes/register/:id
+* CLASS_ID - INT - REQUIRED
+Returns number of people in class
+
 [POST] Add class
 // Instructors only
 /api/classes/
