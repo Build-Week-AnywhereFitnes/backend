@@ -13,12 +13,20 @@ function getUsers() {
 }
 
 function getUserById(id) {
-
-  console.log(`getUserById sdsd`, id)
-
   return db('users')
     .where('users.user_id', id)
     .first()
+}
+
+function getRegistered(id) {
+  return db('usersInClasses as u')
+    .join('classes as c', 'u.class_id', '=', 'c.class_id')
+    .select(
+      'u.class_id',
+      'c.className',
+      'c.classType'
+    )
+    .where('user_id', id)
 }
 
 function getUserByUsername(username) {
@@ -28,21 +36,19 @@ function getUserByUsername(username) {
 }
 
 async function addUser(newUser) {
-  const [addedUser] = await db('users')
+  return  await db('users')
     .insert(newUser)
-
-  return newUser.username
 }
 
 async function deleteUser(username) {
-  const count = await db('users')
+  return await db('users')
     .where({username}).del()
-  return count
 }
 
 module.exports = {
   getUsers,
   getUserById,
+  getRegistered,
   getUserByUsername,
   addUser,
   deleteUser
