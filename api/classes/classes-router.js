@@ -5,9 +5,9 @@ const Classes = require('./classes-model')
 
 const restricted = require('../middleware/auth-middleware')
 const adminCheck = require('../middleware/admin-middleware');
-const { validateClass } = require('../middleware/classesMiddleware')
+// const { validateClass } = require('../middleware/classesMiddleware')
 
-// getAllClasses()
+// [GET] List of all classes
 router.get('/', restricted, (req, res, next) => {
   Classes.getAllClasses()
     .then((classes) => {
@@ -17,12 +17,12 @@ router.get('/', restricted, (req, res, next) => {
       })
     })
     .catch((err) => {
-      err.message = `Failed to get classes`
+      err.message = `Failed to get classes`,
       next(err)
     })
   })
 
-// getClassByClassId(Class_Id)
+// [GET] Classes by ID
 router.get('/:id', restricted, (req, res, next) => {
   const { id } = req.params
 
@@ -31,12 +31,35 @@ router.get('/:id', restricted, (req, res, next) => {
       res.status(200).json(foundClass)
     })
     .catch((err) => {
-      err.message = `Server failed to find item with id: ${id}`
+      err.message = `Server failed to find class with id: ${id}`,
       next(err)
     })
 })
 
-// getClassByType(type)
+// [GET] Users taking a class
+router.get('/:id/roster', restricted, (req, res, next) => {
+  const { id } = req.params
+
+  Classes.getClassRoster(id)
+    .then((users) => {
+      if (users.length == 0) {
+        res.status(404).json({
+          message: `The class has no active registrants.`
+        })
+      } else {
+        res.status(200).json({
+          message: `Retrieved users in class with id ${id}`,
+          users
+        })
+      }
+    })
+    .catch((err) => {
+      err.message = `Server failed to retrieve users in class with id: ${id}`
+      next(err)
+    })
+})
+
+// [GET] Classes by type
 router.get('/search/:type', restricted, (req, res, next) => {
   const findByType = req.params.type
   
@@ -47,15 +70,19 @@ router.get('/search/:type', restricted, (req, res, next) => {
           message: `Nothing matches your search criteria`
         })
       } else {
-        res.status(200).json(classes)
+        res.status(200).json({
+          message: `Found classes with type ${findByType}`,
+          classes
+        })
       }
     })
     .catch((err) => {
       err.message = `Server failed to find item with type ${findByType}`
+      next(err)
     })
 })
 
-// countTakenSpots(id), countMaxSpots(id)
+// [GET] Count of open spots in a class
 router.get('/register/:id', restricted, async (req, res, next) => {
   const { id } = req.params
   const theClass = await Classes.getClassByClassId(id)
@@ -80,7 +107,7 @@ router.get('/register/:id', restricted, async (req, res, next) => {
   }
 })
 
-// joinClass(User_Id, Class_Id)
+// [POST] Join a class
 router.post('/register/:id', restricted, async (req, res, next) => {
   const { decodedToken } = req
   const { id } = req.params
@@ -111,7 +138,7 @@ router.post('/register/:id', restricted, async (req, res, next) => {
   }
 })
 
-// cancelClass(id)
+// [DELETE] Leave a class
 router.delete('/register/:id', restricted, async (req, res, next) => {
   const { decodedToken } = req
   const { id } = req.params
@@ -138,12 +165,7 @@ router.delete('/register/:id', restricted, async (req, res, next) => {
   }
 })
 
-// // searchClasses(key)
-// router.get('/search', async (req, res, next) => {
-//   res.message({'hi': 'hi'})
-// })
-
-// addClass(Added_Class)
+// [POST] Add class
 router.post('/', restricted, adminCheck, async (req, res, next) => {
   const aClass = req.body
 
@@ -160,7 +182,7 @@ router.post('/', restricted, adminCheck, async (req, res, next) => {
     })
 })
 
-// updateClass(Updated_Class)
+// [PUT] Update class info
 router.put('/:id', restricted, adminCheck, (req, res, next) => {
   const classToUpdate = req.params.id
   const changedInfo = req.body
@@ -180,7 +202,7 @@ router.put('/:id', restricted, adminCheck, (req, res, next) => {
     })
 })
 
-// deleteClass(Deleted_Class)
+// [DELETE] Delete class
 router.delete('/:id', restricted, adminCheck, (req, res, next) => {
   const classToDelete = req.params.id
 

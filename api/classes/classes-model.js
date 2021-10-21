@@ -1,12 +1,18 @@
 const db = require('../../data/db-config');
 
 function getAllClasses() {
-  return db('classes');
+  return db('classes')
 }
 
-function getClassByClassId(Class_Id) {
+function getClassByClassId(id) {
   return db('classes')
-    .where('class_Id', Class_Id);
+    .where('class_Id', id)
+}
+
+function getClassRoster(id) {
+  return db('usersInClasses')
+    .select('user_id')
+    .where('class_Id', id)
 }
 
 function getClassByClassType(type) {
@@ -14,35 +20,33 @@ function getClassByClassType(type) {
     .where('classType', type)
 }
 
-function countTakenSpots(Class_Id) {
-  const takenSpots = db('usersInClasses')
+function countTakenSpots(id) {
+  return db('usersInClasses')
     .count('class_id as count')
-    .where('class_id', Class_Id)
-  return takenSpots
+    .where('class_id', id)
 }
 
-function countMaxSpots(Class_Id) {
-  const maxSpots = db('classes')
+function countMaxSpots(id) {
+  return db('classes')
     .select('classMax')
-    .where('class_id', Class_Id)
+    .where('class_id', id)
     .from('classes')
-  return maxSpots
 }
 
-async function joinClass(User_Id, Class_Id) {
+async function joinClass(userID, classID) {
   const userToAdd = {
-    user_id: User_Id,
-    class_id: Class_Id
+    user_id: userID,
+    class_id: classID
   }
 
   return await db('usersInClasses')
     .insert(userToAdd)
 }
 
-async function cancelClass(User_Id, Class_Id) {
+async function cancelClass(userID, classID) {
   const classToCancel = {
-    user_id: User_Id,
-    class_id: Class_Id
+    user_id: userID,
+    class_id: classID
   }
 
   return await db('usersInClasses')
@@ -50,26 +54,26 @@ async function cancelClass(User_Id, Class_Id) {
     .del()
 }
 
-async function addClass(Added_Class) {
+async function addClass(newClass) {
   const [class_id] = await db('classes')
-    .insert(Added_Class)
+    .insert(newClass)
 
   return getAllClasses()
     .where({class_id}).first()
 };
 
-async function updateClass(id, Updated_Class) {
+async function updateClass(id, editedClass) {
   const class_id = await db('classes')
     .where('classes.class_id', id)
-    .update(Updated_Class)
+    .update(editedClass)
 
   return await getClassByClassId(id)
 };
 
-async function deleteClass(Deleted_Class) {
+async function deleteClass(id) {
 
   const count = await db('classes')
-    .where('classes.class_id', Deleted_Class)
+    .where('classes.class_id', id)
     .del()
 
   return count
@@ -79,7 +83,8 @@ async function deleteClass(Deleted_Class) {
 module.exports = {
     getAllClasses,
     getClassByClassId,
-    getClassByClassType,    
+    getClassRoster, 
+    getClassByClassType,
     countTakenSpots,
     countMaxSpots,
     joinClass,

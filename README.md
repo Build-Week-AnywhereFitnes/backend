@@ -39,6 +39,12 @@ Returns all classes
 * CLASS_ID - INT - REQUIRED
 Returns class data
 
+### [GET] Users taking a class
+/api/classes/:id/roster
+* CLASS_ID - INT - REQUIRED
+Returns message: `Retrieved users in class with id ${id}`
+and list of users in class
+
 ### [GET] Classes by type
 /api/classes/search/:type
 * TYPE - STRING - REQUIRED
