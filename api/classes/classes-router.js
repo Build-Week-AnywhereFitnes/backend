@@ -35,19 +35,28 @@ router.get('/:id', restricted, (req, res, next) => {
     })
 })
 
-// countTakenSpots(Class_Id)
+// countTakenSpots(Class_Id), countMaxSpots(Class_Id)
 router.get('/register/:id', async (req, res, next) => {
   const { id } = req.params
+  const theClass = await Classes.getClassByClassId(id)
 
   try {
     const numSpots = await Classes.countTakenSpots(id)
-    const mSpots = await Classes.countMaxSpots(id)
-    const openSpots = mSpots[0].classMax - numSpots[0].count
-    const theClass = await Classes.getClassByClassId(id)
+    const maxSpots = await Classes.countMaxSpots(id)
+    const openSpots = maxSpots[0].classMax - numSpots[0].count
 
-    res.status(200).json(`There are ${openSpots} out of ${mSpots[0].classMax} available for ${theClass[0].className}`)
+    if (openSpots > 0) {
+      res.status(200).json({
+        message: `There are ${openSpots} out of ${maxSpots[0].classMax} available for ${theClass[0].className}`,
+        confirmation: `You are signed up for ${theClass[0].className}!`
+      })
+    } else {
+      res.status(401).json({
+        message: `There are no spots available for ${theClass[0].className}`
+      })
+    }
   } catch (err) {
-    err.message = `Server failed to find the number of ${openSpots} for ${theClass[0].className}`
+    err.message = `Server failed to find the number of spots available for ${theClass[0].className}`
     next(err)
   }
 })
