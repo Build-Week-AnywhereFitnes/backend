@@ -13,14 +13,6 @@ function countTakenSpots(Class_Id) {
   const takenSpots = db('usersInClasses')
     .count('class_id as count')
     .where('class_id', Class_Id)
-    // .catch((err) => {
-    //   res.json({
-    //     message: `failed retrieving taken spots`
-    //   })
-    // next(err)
-    // })
-
-  // return maxSpots - takenSpots
   return takenSpots
 }
 
