@@ -28,6 +28,11 @@
 * USER_ID - INT - REQUIRED
 * Returns message: `Get /api/users/:id running at ${currentTime}`
 
+### [DELETE] User by ID
+/api/users/:id
+* USER_ID - INT - REQUIRED
+* Returns message: `Successfully deleted ${username}`
+
 ## **CLASS ENDPOINTS**
 
 ### [GET] List of all classes
