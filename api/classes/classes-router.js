@@ -35,8 +35,8 @@ router.get('/:id', restricted, (req, res, next) => {
     })
 })
 
-// countTakenSpots(Class_Id), countMaxSpots(Class_Id)
-router.get('/register/:id', async (req, res, next) => {
+// countTakenSpots(id), countMaxSpots(id)
+router.get('/register/:id', restricted, async (req, res, next) => {
   const { id } = req.params
   const theClass = await Classes.getClassByClassId(id)
 
@@ -47,8 +47,40 @@ router.get('/register/:id', async (req, res, next) => {
 
     if (openSpots > 0) {
       res.status(200).json({
-        message: `There are ${openSpots} out of ${maxSpots[0].classMax} available for ${theClass[0].className}`,
-        confirmation: `You are signed up for ${theClass[0].className}!`
+        message: `There are ${openSpots} out of ${maxSpots[0].classMax} available for ${theClass[0].className}`
+      })
+    } else {
+      res.status(401).json({
+        message: `There are no spots available for ${theClass[0].className}`
+      })
+    }
+  } catch (err) {
+    err.message = `Server failed to find the number of spots available for ${theClass[0].className}`
+    next(err)
+  }
+})
+
+// joinClass(User_Id, Class_Id)
+router.post('/register/:id', restricted, async (req, res, next) => {
+  const { decodedToken } = req
+  const { id } = req.params
+
+  console.log(decodedToken.sub, id)
+
+  const theUser = decodedToken.sub
+  const theClass = await Classes.getClassByClassId(id)
+
+  try {
+    const numSpots = await Classes.countTakenSpots(id)
+    const maxSpots = await Classes.countMaxSpots(id)
+    const openSpots = maxSpots[0].classMax - numSpots[0].count
+
+    if (openSpots > 0) {
+      Classes.joinClass(theUser, theClass[0].class_id)
+
+      res.status(200).json({
+        confirmation: `You are signed up for ${theClass[0].className}!`,
+        message: `There are ${openSpots} out of ${maxSpots[0].classMax} available for ${theClass[0].className}`
       })
     } else {
       res.status(401).json({
