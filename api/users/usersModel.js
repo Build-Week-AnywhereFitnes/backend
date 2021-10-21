@@ -2,7 +2,10 @@ const db = require('../../data/db-config')
 
 function getUsers() {
   return db('users as u')
-    .join('roles as r', 'u.role', '=', 'r.role_id')
+    .join(
+      'roles as r', 
+      'u.role', '=', 'r.role_id'
+    )
     .select(
       'u.user_id',
       'u.username',
@@ -20,7 +23,10 @@ function getUserById(id) {
 
 function getRegistered(id) {
   return db('usersInClasses as u')
-    .join('classes as c', 'u.class_id', '=', 'c.class_id')
+    .join(
+      'classes as c',
+      'u.class_id', '=', 'c.class_id'
+    )
     .select(
       'u.class_id',
       'c.className',

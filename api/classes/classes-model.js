@@ -10,8 +10,20 @@ function getClassByClassId(id) {
 }
 
 function getClassRoster(id) {
-  return db('usersInClasses')
-    .select('user_id')
+  return db('usersInClasses as uC')
+    .join(
+      'users as u',
+      'uC.user_id', '=', 'u.user_id'
+    )
+    .join(
+      'roles as r',
+      'u.role', '=', 'r.role_id'
+    )
+    .select(
+      'u.user_id',
+      'u.username',
+      'r.role_name as role'
+    )
     .where('class_Id', id)
 }
 
