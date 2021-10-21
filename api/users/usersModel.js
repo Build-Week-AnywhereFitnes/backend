@@ -40,9 +40,10 @@ async function addUser(newUser) {
     .insert(newUser)
 }
 
-async function deleteUser(username) {
+async function deleteUser(id) {
   return await db('users')
-    .where({username}).del()
+    .where('user_id', id)
+    .del()
 }
 
 module.exports = {

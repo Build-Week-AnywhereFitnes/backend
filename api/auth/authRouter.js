@@ -8,6 +8,7 @@ const tokenBuilder = require('./token-builder.js')
 
 const currentTime = new Date().toLocaleTimeString()
 
+// [GET] initial server success
 router.get('/', (req, res, next) => {
   res.status(200).json({
     status: 200,
@@ -16,6 +17,7 @@ router.get('/', (req, res, next) => {
   })
 })
 
+// [POST] Create a new user
 router.post('/register', checkRequestBody, async (req, res, next) => {
   const user = req.body
   const hash = bcrypt.hashSync(user.password, 8)
@@ -41,6 +43,7 @@ router.post('/register', checkRequestBody, async (req, res, next) => {
   }
 })
 
+// [POST] Login existing user
 router.post('/login', checkRequestBody, async (req, res, next) => {
   const user = req.body
 
