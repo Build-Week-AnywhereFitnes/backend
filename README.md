@@ -43,8 +43,8 @@ Returns class data
 /api/classes/register/:id
 * CLASS_ID - INT - REQUIRED
 Returns:
-*message: `There are ${openSpots} out of ${maxSpots[0].classMax} available for ${theClass[0].className}`,
-*confirmation: `You are signed up for ${theClass[0].className}!`
+* message: `There are ${openSpots} out of ${maxSpots[0].classMax} available for ${theClass[0].className}`,
+* confirmation: `You are signed up for ${theClass[0].className}!`
 
 ### [POST] Add class
 **Instructors only**
