@@ -5,6 +5,7 @@ const Classes = require('./classes-model')
 
 const restricted = require('../middleware/auth-middleware')
 const adminCheck = require('../middleware/admin-middleware');
+const { validateClass } = require('../middleware/classesMiddleware')
 
 // getAllClasses()
 router.get('/', restricted, (req, res, next) => {
@@ -104,7 +105,10 @@ router.post('/', restricted, adminCheck, async (req, res, next) => {
 
   Classes.addClass(aClass)
     .then(savedClass => {
-      res.status(201).json(`added ${savedClass.className}`)
+      res.status(201).json({
+        message: `added ${savedClass.className}`,
+        savedClass
+      })
     })
     .catch((err) => {
       err.message = `Server failed to add new class`
@@ -121,7 +125,10 @@ router.put('/:id', restricted, adminCheck, (req, res, next) => {
 
   Classes.updateClass(classToUpdate, changedInfo)
     .then(([updatedClass]) => {
-      res.status(200).json(updatedClass)
+      res.status(200).json({
+        message: `${classToUpdate} edited`,
+        updatedClass
+      })
     })
     .catch((err) => {
       err.message = `Server failed to edit item ${classToUpdate}`
