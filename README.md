@@ -28,6 +28,12 @@
 * USER_ID - INT - REQUIRED
 * Returns message: `Get /api/users/:id running at ${currentTime}`
 
+### [GET] Classes registered by user
+/api/users/:id/classes
+* USER_ID - INT - REQUIRED
+* Returns message: `Retrieved user ${id} classes`
+* Returns class id, name, type
+
 ### [DELETE] User by ID
 /api/users/:id
 * USER_ID - INT - REQUIRED
