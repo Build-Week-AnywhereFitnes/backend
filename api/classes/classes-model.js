@@ -34,6 +34,17 @@ async function joinClass(User_Id, Class_Id) {
     .insert(userToAdd)
 }
 
+async function cancelClass(User_Id, Class_Id) {
+  const classToCancel = {
+    user_id: User_Id,
+    class_id: Class_Id
+  }
+
+  return await db('usersInClasses')
+    .where(classToCancel)
+    .del()
+}
+
 async function addClass(Added_Class) {
   const [class_id] = await db('classes')
     .insert(Added_Class)
@@ -66,6 +77,7 @@ module.exports = {
     countTakenSpots,
     countMaxSpots,
     joinClass,
+    cancelClass,
     // searchClasses,
     addClass,
     updateClass,

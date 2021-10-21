@@ -66,8 +66,6 @@ router.post('/register/:id', restricted, async (req, res, next) => {
   const { decodedToken } = req
   const { id } = req.params
 
-  console.log(decodedToken.sub, id)
-
   const theUser = decodedToken.sub
   const theClass = await Classes.getClassByClassId(id)
 
@@ -90,6 +88,33 @@ router.post('/register/:id', restricted, async (req, res, next) => {
     }
   } catch (err) {
     err.message = `Server failed to find the number of spots available for ${theClass[0].className}`
+    next(err)
+  }
+})
+
+// cancelClass(id)
+router.delete('/register/:id', restricted, async (req, res, next) => {
+  const { decodedToken } = req
+  const { id } = req.params
+  
+  try {
+    const theUser = decodedToken.sub
+    const theClass = id
+  
+    const existingClass = await Classes.getClassByClassId(id)
+    
+    if (!existingClass.className) {
+      res.status(401).json({
+        message: `The class with id ${id} does not exist`
+      })
+    } else {
+      Classes.cancelClass(theUser, theClass)
+      res.status(202).json({
+        message: `${theClass} was successfully cancelled for ${theUser}`
+      })
+    }
+  } catch (err) {
+    err.message = `Server failed to cancel the class`
     next(err)
   }
 })
@@ -145,7 +170,7 @@ router.delete('/:id', restricted, adminCheck, (req, res, next) => {
   Classes.deleteClass(classToDelete)
     .then(count => {
       if (count > 0) {
-        res.status(200).json({
+        res.status(202).json({
           message: `${classToDelete} is removed`
         })
       } else {
