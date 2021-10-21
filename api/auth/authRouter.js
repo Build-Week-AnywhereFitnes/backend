@@ -30,6 +30,8 @@ router.post('/register', checkRequestBody, async (req, res, next) => {
       const [newUser] = await Users.addUser({ ...user, password: hash })
       res.status(201).json({
         message: `successfully added user ${user.username}`,
+        newUserID: newUser,
+        user
       })
     } else {
       res.status(401).json({
