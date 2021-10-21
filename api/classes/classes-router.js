@@ -36,6 +36,25 @@ router.get('/:id', restricted, (req, res, next) => {
     })
 })
 
+// getClassByType(type)
+router.get('/search/:type', restricted, (req, res, next) => {
+  const findByType = req.params.type
+  
+  Classes.getClassByClassType(findByType)
+    .then((classes) => {
+      if (classes.length == 0) {
+        res.status(404).json({
+          message: `Nothing matches your search criteria`
+        })
+      } else {
+        res.status(200).json(classes)
+      }
+    })
+    .catch((err) => {
+      err.message = `Server failed to find item with type ${findByType}`
+    })
+})
+
 // countTakenSpots(id), countMaxSpots(id)
 router.get('/register/:id', restricted, async (req, res, next) => {
   const { id } = req.params
