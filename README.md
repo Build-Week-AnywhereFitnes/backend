@@ -51,6 +51,11 @@ Returns:
 * confirmation: `You are signed up for ${theClass[0].className}!`
 * message: `There are now ${openSpots} out of ${maxSpots[0].classMax} available for ${theClass[0].className}`
 
+### [DELETE] Leave a class
+/api/classes/register/:id
+* CLASS_ID - INT - REQUIRED
+Returns message: `${theClass} was successfully cancelled for ${theUser}`
+
 ### [POST] Add class
 **Instructors only**
 /api/classes/
