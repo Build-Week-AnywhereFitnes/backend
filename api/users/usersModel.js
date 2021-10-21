@@ -1,22 +1,23 @@
 const db = require('../../data/db-config')
 
 function getUsers() {
-  return db('users')
+  return db('users as u')
+    .join('roles as r', 'u.role', '=', 'r.role_id')
     .select(
-      'users.username',
-      'users.password'
+      'u.user_id',
+      'u.username',
+      'u.password',
+      'r.role_name as role',
+      'u.auth'
     )
-  
 }
 
-function getUserById(user_id) {
-  console.log(`id ${user_id} reached`)
+function getUserById(id) {
 
-  // database needs id numbers for users
+  console.log(`getUserById sdsd`, id)
 
   return db('users')
-    .select('users.username', 'users.password')
-    .where('users.user_id', user_id)
+    .where('users.user_id', id)
     .first()
 }
 
@@ -33,9 +34,16 @@ async function addUser(newUser) {
   return newUser.username
 }
 
+async function deleteUser(username) {
+  const count = await db('users')
+    .where({username}).del()
+  return count
+}
+
 module.exports = {
   getUsers,
   getUserById,
   getUserByUsername,
-  addUser
+  addUser,
+  deleteUser
 }

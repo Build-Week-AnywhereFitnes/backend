@@ -3,8 +3,11 @@ const db = require('../../data/db-config');
 const router = require('express').Router()
 const Classes = require('./classes-model')
 
+const restricted = require('../middleware/auth-middleware')
+const adminCheck = require('../middleware/admin-middleware');
+
 // getAllClasses()
-router.get('/', (req, res, next) => {
+router.get('/', restricted, (req, res, next) => {
   Classes.getAllClasses()
     .then((classes) => {
       res.status(200).json({
@@ -19,7 +22,7 @@ router.get('/', (req, res, next) => {
   })
 
 // getClassByClassId(Class_Id)
-router.get('/:id', (req, res, next) => {
+router.get('/:id', restricted, (req, res, next) => {
   const { id } = req.params
 
   Classes.getClassByClassId(id)
@@ -32,10 +35,30 @@ router.get('/:id', (req, res, next) => {
     })
 })
 
-// addClass(Added_Class)
-router.post('/', async (req, res, next) => {
-  // need to check that the user is logged in
+// countTakenSpots(Class_Id)
+router.get('/register/:id', async (req, res, next) => {
+  const { id } = req.params
 
+  try {
+    const numSpots = await Classes.countTakenSpots(id)
+    const mSpots = await Classes.countMaxSpots(id)
+    const openSpots = mSpots[0].classMax - numSpots[0].count
+    const theClass = await Classes.getClassByClassId(id)
+
+    res.status(200).json(`There are ${openSpots} out of ${mSpots[0].classMax} available for ${theClass[0].className}`)
+  } catch (err) {
+    err.message = `Server failed to find the number of ${openSpots} for ${theClass[0].className}`
+    next(err)
+  }
+})
+
+// // searchClasses(key)
+// router.get('/search', async (req, res, next) => {
+//   res.message({'hi': 'hi'})
+// })
+
+// addClass(Added_Class)
+router.post('/', restricted, adminCheck, async (req, res, next) => {
   const aClass = req.body
 
   Classes.addClass(aClass)
@@ -49,15 +72,12 @@ router.post('/', async (req, res, next) => {
 })
 
 // updateClass(Updated_Class)
-router.put('/:id', (req, res, next) => {
-  // need to check the user is logged in
-
+router.put('/:id', restricted, adminCheck, (req, res, next) => {
   const classToUpdate = req.params.id
   const changedInfo = req.body
   console.log(classToUpdate)
   console.log(changedInfo)
 
-  // if user is not logged in ... else ...
   Classes.updateClass(classToUpdate, changedInfo)
     .then(([updatedClass]) => {
       res.status(200).json(updatedClass)
@@ -69,7 +89,7 @@ router.put('/:id', (req, res, next) => {
 })
 
 // deleteClass(Deleted_Class)
-router.delete('/:id', (req, res, next) => {
+router.delete('/:id', restricted, adminCheck, (req, res, next) => {
   const classToDelete = req.params.id
 
   console.log('router: delete class:', classToDelete)

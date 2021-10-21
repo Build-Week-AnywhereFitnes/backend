@@ -9,6 +9,22 @@ function getClassByClassId(Class_Id) {
     .where('class_Id', Class_Id);
 };
 
+function countTakenSpots(Class_Id) {
+  const takenSpots = db('usersInClasses')
+    .count('class_id as count')
+    .where('class_id', Class_Id)
+  return takenSpots
+}
+
+function countMaxSpots(Class_Id) {
+  const maxSpots = db('classes')
+    .select('classMax')
+    .where('class_id', Class_Id)
+    .from('classes')
+  console.log(`maxSpots`, maxSpots)
+  return maxSpots
+}
+
 async function addClass(Added_Class) {
   const [class_id] = await db('classes')
     .insert(Added_Class)
@@ -38,6 +54,9 @@ async function deleteClass(Deleted_Class) {
 module.exports = {
     getAllClasses,
     getClassByClassId,
+    countTakenSpots,
+    countMaxSpots,
+    // searchClasses,
     addClass,
     updateClass,
     deleteClass
