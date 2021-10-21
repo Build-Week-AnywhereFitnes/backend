@@ -9,6 +9,11 @@ function getClassByClassId(Class_Id) {
     .where('class_Id', Class_Id);
 }
 
+function getClassByClassType(type) {
+  return db('classes')
+    .where('classType', type)
+}
+
 function countTakenSpots(Class_Id) {
   const takenSpots = db('usersInClasses')
     .count('class_id as count')
@@ -74,11 +79,11 @@ async function deleteClass(Deleted_Class) {
 module.exports = {
     getAllClasses,
     getClassByClassId,
+    getClassByClassType,    
     countTakenSpots,
     countMaxSpots,
     joinClass,
     cancelClass,
-    // searchClasses,
     addClass,
     updateClass,
     deleteClass

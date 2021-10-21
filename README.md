@@ -39,6 +39,12 @@ Returns all classes
 * CLASS_ID - INT - REQUIRED
 Returns class data
 
+### [GET] Classes by type
+/api/classes/search/:type
+* TYPE - STRING - REQUIRED
+*There are only a few types right now but I can add more classes for more data if needed.*
+Returns all classes with matching type
+
 ### [GET] Count of open spots in a class
 /api/classes/register/:id
 * CLASS_ID - INT - REQUIRED
