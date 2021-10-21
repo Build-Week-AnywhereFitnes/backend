@@ -21,7 +21,6 @@ function countMaxSpots(Class_Id) {
     .select('classMax')
     .where('class_id', Class_Id)
     .from('classes')
-  console.log(`maxSpots`, maxSpots)
   return maxSpots
 }
 
