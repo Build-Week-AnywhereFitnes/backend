@@ -62,25 +62,23 @@ router.get('/:id/classes', restricted, (req, res, next) => {
 })
 
 // [DELETE] User by username
-router.delete('/', restricted, (req, res, next) => {
-  console.log(req.body)
-  const { username } = req.body
+router.delete('/:id', restricted, (req, res, next) => {
+  const { id } = req.params
 
-  // if user is not logged in ... else ...
-  Users.deleteUser(username)
+  Users.deleteUser(id)
     .then((count) => {
       if (count === 1) {
         res.status(204).json({
-          message: `Successfully deleted ${username}`
+          message: `Successfully deleted user with id ${id}`
         })
       } else {
         const err = new Error()
-        err.message = `User ${username} does not exist`
+        err.message = `User with id ${id} does not exist`
         next(err)
       }
     })
     .catch((err) => {
-      err.message = `Server failed to delete user ${username}`
+      err.message = `Server failed to delete user with id ${id}`
     })
 })
 
