@@ -2,12 +2,12 @@ const db = require('../../data/db-config');
 
 function getAllClasses() {
   return db('classes');
-};
+}
 
 function getClassByClassId(Class_Id) {
   return db('classes')
     .where('class_Id', Class_Id);
-};
+}
 
 function countTakenSpots(Class_Id) {
   const takenSpots = db('usersInClasses')
@@ -22,6 +22,16 @@ function countMaxSpots(Class_Id) {
     .where('class_id', Class_Id)
     .from('classes')
   return maxSpots
+}
+
+async function joinClass(User_Id, Class_Id) {
+  const userToAdd = {
+    user_id: User_Id,
+    class_id: Class_Id
+  }
+
+  return await db('usersInClasses')
+    .insert(userToAdd)
 }
 
 async function addClass(Added_Class) {
@@ -55,6 +65,7 @@ module.exports = {
     getClassByClassId,
     countTakenSpots,
     countMaxSpots,
+    joinClass,
     // searchClasses,
     addClass,
     updateClass,
