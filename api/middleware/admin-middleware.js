@@ -1,9 +1,6 @@
 const adminCheck = (req, res, next) => {
   const { decodedToken } = req
 
-  // console.log(`admin check`, req)
-  // console.log(`admin check`, decodedToken.role)
-
   if (decodedToken.role !== 1) {
     next({
       status: 403,
