@@ -20,6 +20,8 @@ exports.up = function(knex) {
         .references('roles.role_id')
         .defaultTo(2)
       tbl.integer('auth')
+      tbl.integer('last_login')
+        .defaultsTo(null)
     })
 
     .createTable('classes', tbl => {

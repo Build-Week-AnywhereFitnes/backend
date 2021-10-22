@@ -1,4 +1,5 @@
 const db = require('../../data/db-config')
+const { use } = require('../auth/authRouter')
 
 function getUsers() {
   return db('users as u')
@@ -52,11 +53,29 @@ async function deleteUser(id) {
     .del()
 }
 
+// how to implement??
+async function firstTimeCheck(username) {
+  const lastLogin = await db('users')
+    .select('last_login')
+    .where('username', username)
+
+  if (!lastLogin[0].lastLogin) {
+    const hasLoggedIn = await db('users')
+      .where('username', username)
+      .update('last_login', 1)
+    console.log(hasLoggedIn)
+    return hasLoggedIn
+  } else {
+    return
+  }
+}
+
 module.exports = {
   getUsers,
   getUserById,
   getRegistered,
   getUserByUsername,
   addUser,
-  deleteUser
+  deleteUser,
+  firstTimeCheck
 }

@@ -1,8 +1,10 @@
 const router = require('express').Router()
+
 const Users = require('../users/usersModel')
-const {
-  checkRequestBody
-} = require('../middleware/userMiddleware')
+
+const { checkRequestBody } = require('../middleware/userMiddleware')
+// const { firstTimeCheck } = require('../middleware/init-middleware')
+
 const bcrypt = require('bcryptjs')
 const tokenBuilder = require('./token-builder.js')
 
@@ -46,6 +48,7 @@ router.post('/register', checkRequestBody, async (req, res, next) => {
 })
 
 // [POST] Login existing user
+// router.post('/login', checkRequestBody, firstTimeCheck, async (req, res, next) => {
 router.post('/login', checkRequestBody, async (req, res, next) => {
   const user = req.body
 
@@ -55,6 +58,8 @@ router.post('/login', checkRequestBody, async (req, res, next) => {
     const dbUser = await Users.getUserByUsername(user.username)
     if (dbUser && bcrypt.compareSync(user.password, dbUser.password) || user.password === dbUser.password) {
       const token = tokenBuilder(dbUser)
+
+      // Users.firstTimeCheck(user.username)
       
       res.status(200).json({
         status: 200,
