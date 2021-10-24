@@ -1,6 +1,9 @@
 # backend
 ## All server-side routing and api
 
+
+BASE ENDPOINT: https://build-week-anywhere-fitness.herokuapp.com/
+
 ## **AUTH ENDPOINTS**
 
 ### [POST] Create a new user
